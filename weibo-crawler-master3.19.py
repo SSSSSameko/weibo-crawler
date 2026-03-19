@@ -598,11 +598,13 @@ class WeiboMonitor:
         url = f"{self.CMT_URL}?is_show_bulletin=2&is_mix=0&id={weibo_id}&is_show_cmt_num=0&comment_type=0&page={page}&count=20&uid={uid}"
         try:
             r = self._get(url, uid=uid, mid=weibo_id)
+            log.info("[一级评论] weibo_id=%s status=%d", weibo_id, r.status_code)
             if r.status_code != 200:
-                log.warning("一级评论非200 weibo=%s status=%d", weibo_id, r.status_code)
+                log.warning("[一级评论] 非200 status=%d body=%s", r.status_code, r.text[:300])
                 return [], False
             d = r.json() if r.text.strip() else {}
             raw_data = d.get("data", [])
+            log.info("[一级评论] weibo_id=%s 条数=%d has_more=%s", weibo_id, len(raw_data), d.get("has_more"))
             items = [{
                 "comment_id": str(c.get("id", "")),
                 "user_name": c.get("user", {}).get("screen_name", ""),
@@ -627,13 +629,15 @@ class WeiboMonitor:
                 "Accept": "application/json, text/plain, */*",
                 "X-Requested-With": "XMLHttpRequest",
             }, timeout=self.cfg.request_timeout)
+            log.info("[二级评论] cid=%s status=%d", cid, r.status_code)
             if r.status_code != 200:
                 self.thr.err()
-                log.warning("二级评论非200 cid=%s status=%d", cid, r.status_code)
+                log.warning("[二级评论] 非200 cid=%s status=%d body=%s", cid, r.status_code, r.text[:300])
                 return []
             self.thr.ok()
             d = r.json() if r.text.strip() else {}
             raw_data = d.get("data", [])
+            log.info("[二级评论] cid=%s 条数=%d", cid, len(raw_data))
             if not raw_data:
                 return []
             return [{
@@ -680,6 +684,7 @@ class WeiboMonitor:
 
             time.sleep(random.uniform(lo, hi) / 2)
             replies = self._pull_replies(uid, wid, cid)
+            log.info("[二级评论流程] cid=%s 抓到%d条", cid, len(replies))
 
             for sc in replies:
                 sid = sc["sub_comment_id"]
@@ -818,6 +823,7 @@ class WeiboMonitor:
                         log.info("优先检查 %s/%s 评论", nick, wid)
                         self._watch_comments(uid, wid)
                         d = self.thr.delay() / 2
+                        log.info("歇 %.0fs", d)
                         time.sleep(d)
                     else:
                         log.info("轮到 %s (%s)", nick, uid)
@@ -825,6 +831,7 @@ class WeiboMonitor:
                         self._sweep_old(uid)
                         self._gc(uid)
                         d = self.thr.delay()
+                        log.info("歇 %.0fs", d)
                         time.sleep(d)
                 except KeyboardInterrupt:
                     raise
