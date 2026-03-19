@@ -1,0 +1,22 @@
+{
+  "cookie": "",
+  "priority_uid": "",
+  "normal_uids": [],
+  "proxy": "",
+  "wechat": {
+    "corp_id": "",
+    "agent_id": 0,
+    "app_secret": "",
+    "to_user": "@all"
+  },
+  "poll_interval_min": 61,
+  "poll_interval_max": 70,
+  "comment_delay_min": 1,
+  "comment_delay_max": 3,
+  "weibo_fetch_count": 30,
+  "max_monitored_weibos": 100,
+  "comment_max_pages": 5,
+  "push_days_threshold": 6,
+  "risk_control": true,
+  "heartbeat_interval": 60
+}
