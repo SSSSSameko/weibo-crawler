@@ -485,7 +485,7 @@ class WeiboMonitor:
                 self._cold_start.add(uid)
             self._nickname(uid)
 
-        log.info("盯着 %d 个人: %s", len(self.uids), self.uids)
+        log.info("开始视奸")
         if cfg.proxy:
             log.info("代理: %s", cfg.proxy)
 
@@ -804,7 +804,7 @@ class WeiboMonitor:
     # -- main loop --
 
     def run(self):
-        log.info("开始监控，活跃超时: %ds", ACTIVE_TIMEOUT)
+        log.info("开始视奸，活跃超时: %ds", ACTIVE_TIMEOUT)
         threading.Thread(target=self._heartbeat_loop, daemon=True).start()
 
         while True:
@@ -823,7 +823,7 @@ class WeiboMonitor:
                         log.info("优先检查 %s/%s 评论", nick, wid)
                         self._watch_comments(uid, wid)
                         d = self.thr.delay() / 2
-                        log.info("歇 %.0fs", d)
+                        log.info("风控延迟 %.0fs", d)
                         time.sleep(d)
                     else:
                         log.info("轮到 %s (%s)", nick, uid)
@@ -831,7 +831,7 @@ class WeiboMonitor:
                         self._sweep_old(uid)
                         self._gc(uid)
                         d = self.thr.delay()
-                        log.info("歇 %.0fs", d)
+                        log.info("风控延迟 %.0fs", d)
                         time.sleep(d)
                 except KeyboardInterrupt:
                     raise
@@ -855,7 +855,7 @@ def main():
     mon = None
 
     def bye(signum, _):
-        log.info("停止 %d，保存", signum)
+        log.info(" %d停止运行，保存", signum)
         if mon:
             mon.db.heartbeat(mon._loop, "stopped")
             mon.db.close()
