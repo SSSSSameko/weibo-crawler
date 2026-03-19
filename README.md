@@ -6,7 +6,7 @@
 
 ## 修复-优化
 
-- 重写_build_queue
+- 重写_build_queue 重构轮询逻辑，增加ACTIVE判定在活跃的微博（评论
 - /
 - TIME_THRESHOLD
 - 代理支持
