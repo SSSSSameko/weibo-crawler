@@ -6,7 +6,8 @@
 
 ## 修复-优化
 
-
+- 重写_build_queue
+- /
 - TIME_THRESHOLD
 - 代理支持
 - SQLite 存储
@@ -15,7 +16,7 @@
 - 封装为 WeiboMonitor 类
 - 使用 logging 模块替代 print
 - 请求加入自动重试
-- 轮询大量优化_build_queue
+- 轮询大量优化
 - 内存定期清理
 - 心跳监控
 - 风控自适应降频（好像没什么用，一般出问题基本上就是cookie过期了
